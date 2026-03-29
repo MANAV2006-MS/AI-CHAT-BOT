@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Neno AI - Your Smart Chat Companion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+        <div class="particle particle-4"></div>
+        <div class="particle particle-5"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="neno-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h1>
+                <span class="n">N</span>eno
+                <span class="ai">AI</span>
+            </h1>
+        </div>
+        <p>Your AI buddy for fitness, study, motivation & real talk 🚀</p>
+    </header>
+
+    <!-- Main Chat Container -->
+    <main class="chat-container">
+        <!-- Chat Messages -->
+        <div class="chat-box" id="chatBox">
+            <!-- Neno Welcome Message -->
+            <div class="welcome-message">
+                <div class="message bot-message">
+                    <div class="message-content">
+                        <strong>👋 Welcome to Neno!</strong><br>
+                        I'm your AI companion! Try these:<br>
+                        <em>"hello" • "gym" • "study" • "motivate me" • anything!</em><br>
+                        <small>💬 Neno's ready to chat 24/7</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- User/Bot Messages -->
+            {% for chat in chats %}
+                <div class="message user-message">
+                    <div class="message-content">
+                        <span class="user-label">You:</span>
+                        {{ chat.user_msg }}
+                    </div>
+                </div>
+                <div class="message bot-message">
+                    <div class="message-content">
+                        <span class="bot-label">Neno:</span>
+                        {{ chat.bot_reply }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Chat Input Form -->
+        <form method="POST" class="input-form" id="chatForm">
+            <div class="input-group">
+                <input type="text" 
+                       name="message" 
+                       id="messageInput" 
+                       placeholder="Type your message... (or hit Enter)" 
+                       autocomplete="off" 
+                       required 
+                       maxlength="500">
+                <button type="submit" id="sendBtn" title="Send">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <!-- Floating Action Buttons -->
+    <div class="fab-container">
+        <a href="{{ url_for('clear_chat') }}" 
+           class="fab clear-btn" 
+           onclick="return confirm('🗑️ Clear all chats with Neno?')">
+            <i class="fas fa-trash-alt"></i>
+        </a>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Auto-scroll to bottom
+        function scrollToBottom() {
+            const chatBox = document.getElementById('chatBox');
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // DOM ready
+        document.addEventListener('DOMContentLoaded', function() {
+            scrollToBottom();
+        });
+
+        // Enter key to send
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.getElementById('chatForm').submit();
+            }
+        });
+
+        // Focus input on load
+        document.getElementById('messageInput').focus();
+
+        // Smooth animations for new messages
+        const observer = new MutationObserver(function() {
+            scrollToBottom();
+        });
+        observer.observe(document.getElementById('chatBox'), { childList: true });
+    </script>
+</body>
+</html>
